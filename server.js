@@ -118,8 +118,18 @@ app.get("/community", async (req, res) => {
 
 app.post("/join", async (req, res) => {
   const id = req.body.id;
-  await User.updateOne({ sub: identity }, { $push: { camp: id } });
-  res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
+  const exist = await User.findOne({ sub: identity });
+  const sameValue = exist.camp.map((item) => {
+    if (item === id) {
+      return item;
+    }
+  });
+  if (id === sameValue) {
+    res.redirect("https://englishbonfire.netlify.app/unknown");
+  } else {
+    await User.updateOne({ sub: identity }, { $push: { camp: id } });
+    res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
+  }
 });
 
 app.get("/logout", (req, res) => {
