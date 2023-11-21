@@ -54,10 +54,13 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   profile: String,
   status: String,
-  camp: {
-    type: [String],
-    unique: true,
-  },
+  camp: [String],
+});
+
+userSchema.pre("save", (next) => {
+  const uniqueCamp = [...new Set(this.camp)];
+  this.camp = uniqueCamp;
+  next();
 });
 
 let identity = "";
