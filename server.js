@@ -7,7 +7,7 @@ import cors from "cors";
 
 dotenv.config();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const mongodbUri = process.env.MONGODB_URI;
 
 app.use(
@@ -127,6 +127,6 @@ app.get("/logout", (req, res) => {
   res.redirect("https://englishbonfire.netlify.app");
 });
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`your app is running on port ${port}`);
 });
