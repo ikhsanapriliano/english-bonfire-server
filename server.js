@@ -7,7 +7,7 @@ import cors from "cors";
 
 dotenv.config();
 const app = express();
-const port = "https://bonfireserver.cyclic.app";
+const port = 3000;
 const mongodbUri = process.env.MONGODB_URI;
 
 app.use(
