@@ -7,7 +7,7 @@ import cors from "cors";
 
 dotenv.config();
 const app = express();
-const port = 3000;
+const port = "https://english-bonfire-server-production.up.railway.app";
 const mongodbUri = process.env.MONGODB_URI;
 
 app.use(
