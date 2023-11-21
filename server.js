@@ -54,7 +54,10 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   profile: String,
   status: String,
-  camp: [String],
+  camp: {
+    type: [String],
+    unique: true,
+  },
 });
 
 let identity = "";
@@ -118,8 +121,12 @@ app.get("/community", async (req, res) => {
 
 app.post("/join", async (req, res) => {
   const id = req.body.id;
-  await User.updateOne({ sub: identity }, { $push: { camp: id } });
-  res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
+  try {
+    await User.updateOne({ sub: identity }, { $push: { camp: id } });
+    res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
+  } catch (error) {
+    res.redirect("https://englishbonfire.netlify.app/unknown");
+  }
 });
 
 app.post("/something", (req, res) => {
