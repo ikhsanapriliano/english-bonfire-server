@@ -119,11 +119,12 @@ app.get("/community", async (req, res) => {
 
 app.post("/join", async (req, res) => {
   const id = req.body.id;
-  const user = req.body.sub;
-  if (id !== null && user !== null) {
+  const sub = req.body.sub;
+  if (id !== null && sub !== null) {
+    const user = await User.findOne({ sub: sub });
     const exist = user.camp.includes(id);
     if (exist === false) {
-      await User.updateOne({ sub: identity }, { $push: { camp: id } });
+      await User.updateOne({ sub: sub }, { $push: { camp: id } });
       res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
     } else {
       res.redirect("https://englishbonfire.netlify.app/unknown");
