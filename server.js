@@ -108,6 +108,7 @@ app.get("/auth/linkedin/callback", async (req, res) => {
 
 app.get("/personal", async (req, res) => {
   const user = await User.findOne({ sub: identity });
+  identity = "";
   res.json(user);
 });
 
@@ -118,11 +119,15 @@ app.get("/community", async (req, res) => {
 
 app.post("/join", async (req, res) => {
   const id = req.body.id;
-  const user = await User.findOne({ sub: identity });
-  const exist = user.camp.includes(id);
-  if (exist === false) {
-    await User.updateOne({ sub: identity }, { $push: { camp: id } });
-    res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
+  const user = req.body.sub;
+  if (id !== null && user !== null) {
+    const exist = user.camp.includes(id);
+    if (exist === false) {
+      await User.updateOne({ sub: identity }, { $push: { camp: id } });
+      res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
+    } else {
+      res.redirect("https://englishbonfire.netlify.app/unknown");
+    }
   } else {
     res.redirect("https://englishbonfire.netlify.app/unknown");
   }
