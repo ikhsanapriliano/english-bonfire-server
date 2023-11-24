@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import axios from "axios";
 import qs from "querystring";
 import cors from "cors";
+import bodyParser from "body-parser";
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ app.use(
   })
 );
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect(mongodbUri);
@@ -117,6 +119,12 @@ app.get("/community", async (req, res) => {
   res.json(community);
 });
 
+app.post("/coba", (req, res) => {
+  const makan = req.body.makan;
+  const minum = req.body.minum;
+  res.json({ makanan: makan, minuman: minum });
+});
+
 app.post("/join", async (req, res) => {
   const id = req.body && req.body.id;
   const sub = req.body && req.body.sub;
@@ -131,7 +139,6 @@ app.post("/join", async (req, res) => {
         res.redirect("https://englishbonfire.netlify.app/unknown");
       }
     } catch (error) {
-      console.error(error);
       res.redirect("https://englishbonfire.netlify.app/unknown");
     }
   } else {
