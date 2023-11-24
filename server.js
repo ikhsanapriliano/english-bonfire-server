@@ -118,15 +118,20 @@ app.get("/community", async (req, res) => {
 });
 
 app.post("/join", async (req, res) => {
-  const id = req.body.id;
-  const sub = req.body.sub;
-  if (id !== null && sub !== null) {
-    const user = await User.findOne({ sub: sub });
-    const exist = user.camp.includes(id);
-    if (exist === false) {
-      await User.updateOne({ sub: sub }, { $push: { camp: id } });
-      res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
-    } else {
+  const id = req.body && req.body.id;
+  const sub = req.body && req.body.sub;
+  if (id !== undefined && sub !== undefined) {
+    try {
+      const user = await User.findOne({ sub: sub });
+      const exist = user && user.camp.includes(id);
+      if (!exist) {
+        await User.updateOne({ sub: sub }, { $push: { camp: id } });
+        res.redirect("https://englishbonfire.netlify.app/bivouac/finished");
+      } else {
+        res.redirect("https://englishbonfire.netlify.app/unknown");
+      }
+    } catch (error) {
+      console.error(error);
       res.redirect("https://englishbonfire.netlify.app/unknown");
     }
   } else {
